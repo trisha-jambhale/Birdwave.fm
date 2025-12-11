@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BIRDWAVE.fm</title>
+
+  <!-- Tone.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js" defer></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Background Video (decorative) -->
+  <div class="video-background video-overlay" aria-hidden="true" role="img" aria-label="Background nature video">
+    <video id="bgVideo" autoplay muted loop playsinline preload="metadata">
+      <source src="videos/1.mp4" type="video/mp4" />
+    </video>
+    <p id="bgVideoDesc" class="sr-only">Decorative looping background nature footage. Visual only.</p>
+  </div>
+
+  <!-- App banner for errors -->
+  <div id="appBanner" class="app-banner hidden" role="status" aria-live="polite"></div>
+
+  <!-- Main Content -->
+  <main class="content" role="main" aria-label="Main content area">
+    <header class="header" role="banner" aria-label="Site header">
+      <div class="logo" aria-hidden="false">
+        BIRDWAVE.fm
+        <div class="tagline">Field recordings reimagined as lofi beats.</div>
+
+        <div class="main-area" id="mainArea">
+          <section class="species-info hidden" id="speciesInfo" aria-live="polite" aria-label="Species information">
+            <h2 class="species-name" id="speciesName">Select a bird</h2>
+
+            <div class="info-grid">
+              <div class="info-item">
+                <span class="info-label">Type:</span>
+                <span class="info-value" id="soundType">—</span>
+              </div>
+
+              <div class="info-item">
+                <span class="info-label">Location:</span>
+                <span class="info-value" id="location">—</span>
+              </div>
+
+              <div class="info-item">
+                <span class="info-label">Duration:</span>
+                <span class="info-value" id="duration">—</span>
+              </div>
+
+              <div class="info-item">
+                <span class="info-label">Recordist:</span>
+                <span class="info-value" id="recordist">—</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <nav class="channel-selector" role="navigation" aria-label="Bird channels">
+        <div class="channel-title">Choose a channel</div>
+        <div class="bird-list" id="birdList" role="list" aria-label="Available bird recordings"></div>
+      </nav>
+    </header>
+  </main>
+
+  <!-- Footer & Floating Controls -->
+  <footer class="footer" role="contentinfo">
+    
+
+    <div class="controls-section hidden" id="controlsSection" role="region" aria-label="Playback controls">
+      <button class="control-btn" id="prevBtn" aria-label="Previous track">⏮ Prev</button>
+      <button class="control-btn primary" id="playBtn" aria-label="Play or pause" aria-pressed="false">▶ Play</button>
+      <button class="control-btn" id="nextBtn" aria-label="Next track">Next ⏭</button>
+      <button class="control-btn" id="stopBtn" aria-label="Stop playback">⏹ Stop</button>
+      <button class="control-btn" id="fullscreenBtn" aria-label="Toggle fullscreen">⛶ Full</button>
+    </div>
+  </footer>
+
+  <!-- SR-only live status for screen-reader playback announcements -->
+  <div id="srStatus" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Onboarding overlay + tooltip -->
+  <div id="onboardOverlay" class="onboard-overlay hidden" aria-hidden="true"></div>
+
+  <div id="onboardTooltip" class="onboard-tooltip hidden" role="dialog" aria-modal="true" aria-labelledby="onboardTitle" aria-describedby="onboardDesc">
+    <div class="onboard-arrow" aria-hidden="true"></div>
+    <h3 id="onboardTitle" class="onboard-title">Welcome</h3>
+    <div id="onboardDesc" class="onboard-desc">Short explanation goes here.</div>
+    <div class="onboard-actions">
+      <button id="onboardOk" class="control-btn primary">OK</button>
+      <button id="onboardSkip" class="control-btn">Skip</button>
+    </div>
+  </div>
+
+  <!-- optional waveform canvas (uncomment to show) -->
+  <!-- <canvas id="waveformCanvas" style="position:fixed;right:4rem;bottom:14rem;width:320px;height:80px;z-index:55;"></canvas> -->
+
+  <script src="script.js" defer></script>
+</body>
+</html>
