@@ -1,0 +1,863 @@
+/* ==========================================================================
+   Birdwave / UI Styles — Cleaned & Commented
+   ========================================================================== */
+
+/* ---------------------------
+   Global CSS variables
+   Merge of your two :root blocks for clarity & DRYness
+   --------------------------- */
+:root{
+  /* Neon accents */
+  --accent-neon: #ff0099;           /* primary hot pink */
+  --accent-neon-2: #00ff99;         /* neon green/cyan secondary */
+  --accent-neon-3: #33ffdd;         /* softer cyan highlight */
+  --accent: var(--accent-neon);
+  --accent-soft: rgba(255,0,153,0.6);
+  --accent-readable: #ff66aa;       /* accessibility fallback for small text */
+
+  /* Background & glass */
+  --bg-deep: #000000;               /* absolute black */
+  --bg: #000;                       /* shorthand */
+  --bg-dim: rgba(4,4,6,0.72);       /* dim glass layer over video */
+  --glass: rgba(255,255,255,0.04);
+  --glass-strong: rgba(0,0,0,0.24);
+
+  /* Text */
+  --text-high: #ffffff;
+  --text: var(--text-high);
+  --text-muted: rgba(255,255,255,0.74);
+  --muted: rgba(255,255,255,0.7);
+  --muted-2: rgba(255,255,255,0.56);
+
+  /* Focus & shadows */
+  --focus-glow: rgba(255,0,153,0.28);
+  --glow-strong: 0 6px 28px rgba(255,0,153,0.18);
+  --glow-soft: 0 4px 18px rgba(255,0,153,0.10);
+
+  /* Textures */
+  --scanline-color: rgba(255,255,255,0.03);
+  --static-overlay: rgba(0,0,0,0.22);
+}
+
+/* ---------------------------
+   Font-face
+   Keep your custom 'Sohne' font, don't change it
+   --------------------------- */
+@font-face {
+  font-family: 'Sohne';
+  src: url('TestSohneSchmal-FettKursiv-BF663d89cad3975.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------
+   Base / Reset
+   --------------------------- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Screen-reader helper */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+/* ---------------------------
+   Utility classes
+   --------------------------- */
+.hidden { display: none !important; }
+.loading {
+  text-align: center;
+  padding: 3rem;
+  font-family: 'Sohne', Inter, system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: white;
+  text-shadow: 0 0 12px rgba(255,255,255,0.3);
+}
+
+/* Neon text helpers */
+.neon-text {
+  color: var(--accent-neon);
+  text-shadow:
+    0 0 6px rgba(255,0,153,0.9),
+    0 0 18px rgba(255,0,153,0.5),
+    0 0 36px rgba(51,255,221,0.06);
+}
+.neon-soft {
+  color: var(--accent-readable);
+  text-shadow: 0 0 8px rgba(255,102,170,0.28);
+}
+
+/* Focus visible state for keyboard accessibility */
+.focus-visible {
+  outline: 3px solid var(--focus-glow);
+  outline-offset: 4px;
+  box-shadow: var(--glow-soft);
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+/* ---------------------------
+   Video background
+   - full-bleed, textured overlay, dark gradient overlay
+   --------------------------- */
+.video-background {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+.video-background video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+  background: #000;
+}
+
+/* subtle grid & vignette overlays */
+.video-background::after {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.15) 1px, transparent 1px);
+  background-size: 4px 4px;
+  pointer-events: none;
+}
+.video-background::before {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ---------------------------
+   Page layout: header, main content & footer
+   --------------------------- */
+.content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 3rem 4rem 8rem 4rem;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+.logo {
+  font-family: 'Sohne', system-ui, sans-serif;
+  font-size: 4.2rem;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--accent);
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+  line-height: 1;
+  text-shadow: 0 0 30px rgba(0.9, 0.9, 0.9, 0.7);
+}
+.tagline {
+  font-family: Inter, system-ui;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--muted);
+  text-shadow: 0 0 8px rgba(255,255,255,0.06);
+  margin-top: 0.25rem;
+}
+
+/* Main area: left bird list + right details (flex layout) */
+.main-area {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  overflow: hidden;
+  padding: 1.6rem 0 0 0;
+}
+
+/* ---------------------------
+   Bird list (left column)
+   - scrollable, card-based list
+   --------------------------- */
+.channel-selector {
+  font-family: 'Sohne', Inter, system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+/* container for list items */
+.bird-list {
+  flex: 0 0 500px;        /* preferred width */
+  max-width: 260px;       /* clamp for large screens */
+  min-width: 220px;
+  display: block;
+  gap: 0.5rem;
+  padding: 12px 16px;     /* padding to avoid clipping shadows */
+  overflow-y: auto;
+  max-height: calc(109vh - 240px);
+  margin-top: 10px;
+  margin-bottom: 1rem;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  background: linear-gradient(180deg, rgba(0,0,0,0.06), transparent);
+  border-radius: 10px;
+}
+
+/* custom scrollbar thumb for webkit */
+.bird-list::-webkit-scrollbar { width: 8px; }
+.bird-list::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.06);
+  border-radius: 6px;
+}
+
+/* fade mask on right edge so content feels inset */
+.bird-list::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 36px; height: 100%;
+  pointer-events: none;
+  background: linear-gradient(to left, rgba(0,0,0,0.35), rgba(0,0,0,0));
+  border-radius: 0 6px 6px 0;
+}
+
+/* individual bird card */
+.bird-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 10px;
+  margin-bottom: 0.6rem;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: transform .18s ease, box-shadow .18s ease;
+  overflow: visible;   /* allow shadows to render outside */
+  position: relative;
+  z-index: 1;
+  will-change: transform, box-shadow;
+  padding: 6px;
+}
+
+/* top row of a card (clickable area) */
+.bird-row {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005));
+}
+
+/* hover / active elevation for visual affordance */
+.bird-card:hover {
+  transform: translateY(-6px);
+  z-index: 5;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.6);
+  border-color: var(--accent-soft);
+}
+.bird-card.active {
+  transform: translateY(-6px);
+  z-index: 6;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.6);
+  border-color: var(--accent);
+}
+
+/* name + wrapping behavior */
+.bird-name {
+  font-family: 'Sohne', Inter, system-ui, sans-serif;
+  font-size: 1.02rem;
+  font-style: italic;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+  line-height: 1.1;
+  padding-right: 6px;
+}
+.bird-name[data-wrap="true"] { white-space: normal; word-break: break-word; }
+
+/* collapsible inline details (default collapsed) */
+.bird-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 260ms cubic-bezier(.2,.9,.2,1), padding 180ms ease;
+  padding: 0 .9rem;
+  background: rgba(255,255,255,0.02);
+  display: none; /* controlled via JS: .open or display:block on mobile */
+}
+.bird-details .details-inner {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+.bird-details .details-title {
+  font-family: 'Sohne', Inter, system-ui, sans-serif;
+  font-size: 1.02rem;
+  color: var(--accent-readable);
+}
+.bird-details .details-row {
+  display: flex;
+  gap: .6rem;
+  align-items: center;
+  font-family: Inter, system-ui, sans-serif;
+  font-style: italic;
+  color: rgba(255,255,255,0.95);
+}
+
+/* ---------------------------
+   Species info panel (right column or fixed bottom on desktop)
+   --------------------------- */
+.species-info {
+  max-width: 420px;
+  width: 100%;
+  text-align: bottom;
+  margin-bottom: 0px;
+}
+.species-info.hidden { display: none; }
+
+/* fixed-bottom variant used on desktop */
+.species-info.fixed-bottom {
+  position: fixed;
+  left: 4rem;
+  bottom: 5.8rem;
+  z-index: 110;
+  max-width: 420px;
+  width: 360px;
+  background: rgba(0,0,0,0.18);
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+/* species title & info grid */
+.species-name {
+  font-family: 'Sohne', Inter, system-ui, sans-serif;
+  font-size: 1.5rem;
+  font-style: italic;
+  color: var(--accent);
+  margin-bottom: 1rem;
+  line-height: 1;
+}
+.info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-bottom: 1.6rem;
+}
+.info-item {
+  font-family: Inter, system-ui;
+  font-size: 1rem;
+  color: var(--muted);
+  display: flex;
+}
+.info-label {
+  color: rgba(255,0,153,0.85);
+  min-width: 110px;
+  font-weight: 600;
+}
+.info-value {
+  color: rgba(255,255,255,0.95);
+  font-weight: 300;
+}
+
+/* ---------------------------
+   Controls & footer
+   - central floating controls + footer credit
+   --------------------------- */
+.footer {
+  position: fixed;
+  left: 4rem;
+  right: 4rem;
+  bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 50;
+}
+.footer-credit {
+  font-family: 'Sohne', Inter, system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--accent);
+  text-shadow: 0 0 10px rgba(255,0,153,0.3);
+}
+
+/* central controls */
+.controls-section {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 1.6rem;
+  z-index: 120;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  padding: 0.4rem 0.6rem;
+  border-radius: 14px;
+  background: var(--glass);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.45);
+  pointer-events: auto;
+}
+.control-btn {
+  background: rgba(255,0,153,0.18);
+  border: 1px solid rgba(255,0,153,0.5);
+  color: white;
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.92rem;
+  transition: transform .14s ease, box-shadow .14s ease;
+  font-family: Inter, system-ui;
+}
+.control-btn:hover { transform: translateY(-3px); }
+.control-btn.primary {
+  background: linear-gradient(90deg, var(--accent), #ff66aa);
+  border-color: #ff66aa;
+  box-shadow: 0 8px 30px rgba(255,0,153,0.18);
+}
+
+/* decorative neon control style helper */
+.control-neon {
+  background: linear-gradient(90deg, rgba(255,0,153,0.78), rgba(255,102,170,0.72));
+  border-color: rgba(255,0,153,0.9);
+  box-shadow: 0 10px 40px rgba(255,0,153,0.14);
+}
+
+/* small active pill used for station strip, etc. */
+.pill-active {
+  background: linear-gradient(90deg, var(--accent-neon), var(--accent-neon-2));
+  box-shadow: var(--glow-strong);
+  color: white !important;
+}
+
+/* scanlines helper class (apply to overlays) */
+.scanlines {
+  background-image: linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.04) 51%);
+  background-size: 100% 3px;
+}
+
+/* ---------------------------
+   App banner and onboarding UI
+   --------------------------- */
+.app-banner {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 1.25rem;
+  z-index: 9999;
+  background: rgba(40,40,40,0.95);
+  color: #fff;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  font-family: Inter, system-ui;
+  font-size: 0.95rem;
+}
+.app-banner.hidden { display: none; }
+.app-banner.error { border: 1px solid rgba(255,80,80,0.95); }
+
+/* Onboarding overlay & tooltip styling */
+.onboard-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(0,0,0,0.45);
+  pointer-events: auto;
+}
+.onboard-overlay.hidden { display: none; }
+
+.onboard-tooltip {
+  position: absolute;
+  z-index: 9999;
+  max-width: 360px;
+  background: rgba(255,255,255,0.04);
+  color: #fff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.06);
+  transform-origin: center center;
+  opacity: 0;
+  pointer-events: auto;
+}
+.onboard-tooltip.hidden { display: none; }
+
+.onboard-title {
+  font-family: 'Sohne', Inter, system-ui, sans-serif;
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+  color: var(--accent-readable);
+}
+.onboard-desc {
+  font-family: Inter, system-ui;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  color: rgba(255,255,255,0.95);
+  line-height: 1.25;
+}
+.onboard-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.onboard-arrow {
+  width: 18px; height: 18px;
+  position: absolute;
+  transform: rotate(45deg);
+  background: rgba(255,255,255,0.04);
+  border-left: 1px solid rgba(255,255,255,0.04);
+  border-top: 1px solid rgba(255,255,255,0.04);
+  z-index: -1;
+}
+.onboard-highlight {
+  position: absolute;
+  z-index: 9997;
+  border-radius: 10px;
+  box-shadow: 0 0 0 4px rgba(255,0,153,0.12), 0 16px 40px rgba(0,0,0,0.6);
+  pointer-events: none;
+  border: 1px solid rgba(255,0,153,0.16);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+}
+
+/* ---------- ONBOARDING FIXES (paste after existing onboarding rules) ---------- */
+
+/* Ensure tooltip is visible by default when shown (script toggles .hidden/display) */
+.onboard-tooltip {
+  /* stronger, high-contrast dark glass to read white text on */
+  background: linear-gradient(180deg, rgba(0, 0, 255, 0.92), rgba(12,12,14,0.92));
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.06);
+  opacity: 1;                 /* override earlier opacity:0 */
+  pointer-events: auto;
+  transition: transform .18s cubic-bezier(.2,.9,.2,1), opacity .18s ease;
+  transform: translateY(0);   /* neutral by default */
+}
+
+/* Make title and description pop more */
+.onboard-title {
+  color: var(--accent-neon);
+  font-weight: 700;
+  font-size: 1.06rem;
+}
+.onboard-desc {
+  color: var(--text-muted);
+  font-size: 0.96rem;
+}
+
+/* Actions: make buttons fit your control style */
+.onboard-actions .control-btn {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.92rem;
+  border-radius: 8px;
+}
+.onboard-actions .control-btn.primary {
+  background: linear-gradient(90deg, var(--accent-neon), #ff66aa);
+  border-color: #ff66aa;
+  box-shadow: 0 8px 30px rgba(255,0,153,0.18);
+}
+
+/* Overlay: ensure it sits above everything and blocks interaction */
+.onboard-overlay {
+  z-index: 2147483640; /* very high, to avoid stacking issues */
+  background: rgba(0,0,0,0.55);
+  pointer-events: auto;
+}
+
+/* Arrow: bring it forward and match theme */
+.onboard-arrow {
+  z-index: 2147483639;   /* just below tooltip but above overlay */
+  background: linear-gradient(135deg, rgba(255,0,153,0.12), rgba(255,102,170,0.06));
+  border-left: 1px solid rgba(255,0,153,0.12);
+  border-top: 1px solid rgba(255,0,153,0.12);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+}
+
+/* Highlight box — stronger neon border and subtle pulse */
+.onboard-highlight {
+  border: 1px solid rgba(255,0,153,0.28);
+  box-shadow:
+    0 0 0 6px rgba(255,0,153,0.06),
+    0 20px 60px rgba(0,0,0,0.7);
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.006));
+  animation: onboard-pulse 2200ms ease-in-out infinite;
+}
+
+/* Subtle pulse */
+@keyframes onboard-pulse {
+  0%   { box-shadow: 0 0 0 4px rgba(255,0,153,0.06), 0 18px 50px rgba(0,0,0,0.6); }
+  50%  { box-shadow: 0 0 0 10px rgba(255,0,153,0.04), 0 22px 60px rgba(0,0,0,0.64); }
+  100% { box-shadow: 0 0 0 4px rgba(255,0,153,0.06), 0 18px 50px rgba(0,0,0,0.6); }
+}
+
+/* Desktop: ensure tooltip text readable and arrow visible */
+@media (min-width: 601px) {
+  .onboard-tooltip { opacity: 1; }
+  .onboard-arrow { display: block; }
+}
+
+/* Mobile fallback: make tooltip full width and readable (keeps your existing rules but ensure color) */
+@media (max-width: 600px) {
+  .onboard-tooltip {
+    background: linear-gradient(180deg, rgba(6,6,8,0.95), rgba(12,12,14,0.95));
+    color: #fff;
+    opacity: 1 !important;
+    left: 8px !important;
+    right: 8px !important;
+    bottom: 12px !important;
+    top: auto !important;
+  }
+  .onboard-arrow { display: none; }
+}
+
+.onboard-tooltip { transform: translateY(-8px); opacity: 0; }
+.onboard-tooltip.show { transform: translateY(0); opacity: 1; transition: transform .22s cubic-bezier(.2,.9,.2,1), opacity .18s ease; }
+
+
+/* ---------------------------
+   Responsive adjustments
+   - mobile-first friendly adaptions kept as in original file
+   --------------------------- */
+@media (max-width: 900px) {
+  .content { padding: 2rem 2rem 8rem 2rem; }
+
+  /* CHANGED: Logo and tagline remain left-aligned like desktop */
+  .logo { 
+    font-size: 2.2rem; 
+    align-items: flex-start; 
+    text-align: left; 
+  }
+  .tagline { font-size: 1.02rem; }
+  .main-area { padding: 0.6rem 0 0 0; }
+  .header { flex-direction: column; gap: 1rem; align-items: stretch; margin-bottom: 1rem; }
+
+  .bird-list {
+    max-width: 100%;
+    min-width: 0;
+    height: auto;
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(0,0,0,0.18);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  }
+  .bird-list::after { right: 8px; width: 28px; }
+
+  /* on mobile show details inline */
+  .bird-details { display: block; }
+  .bird-details.open {
+    padding: 0.9rem;
+    max-height: 450px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+
+  /* species info becomes stacked below list */
+  .species-info.fixed-bottom {
+    position: static !important;
+    left: auto;
+    bottom: auto;
+    width: 100%;
+    max-width: none;
+    margin: 0.6rem 0 0 0;
+    padding: 0.8rem;
+    border-radius: 10px;
+    background: var(--glass-strong);
+    display: block;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  }
+  .species-info .info-item { font-size: 1rem; }
+  .species-name { font-size: 1.1rem; }
+
+  .controls-section {
+    bottom: 1.1rem;
+    padding: 0.45rem 0.6rem;
+    gap: 0.5rem;
+    justify-content: center;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0.2rem 0.2rem;
+    border-radius: 8px;
+    background: rgba(0,0,0,0.12);
+  }
+
+  /* hide fullscreen UI on small screens (preserved from original) */
+  #fullscreenBtn { display: none !important; visibility: hidden; pointer-events: none; }
+
+  .footer.mobile-footer {
+    position: static;
+    padding: 1rem 0;
+    margin-top: 0.8rem;
+    left: auto; right: auto; bottom: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    align-items: stretch;
+    background: transparent;
+    z-index: 10;
+  }
+  .footer-credit { text-align: center; width: 100%; order: -1; }
+
+  .control-btn { padding: 0.8rem 1rem; font-size: 0.95rem; border-radius: 8px; }
+  .species-info.hidden { display: none !important; }
+}
+
+@media (max-width: 420px) {
+  .controls-section { padding: 0.35rem 0.5rem; gap: 0.4rem; bottom: 0.9rem; }
+  .control-btn { padding: 0.55rem 0.75rem; font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+  /* let body scroll on very narrow devices to avoid cropping content */
+  body { overflow: auto; }
+}
+
+/* Narrow-screen onboarding tooltip fallback */
+@media (max-width: 600px) {
+  .onboard-tooltip {
+    max-width: 300px;
+    padding: 12px;
+    left: 8px !important;
+    right: 8px !important;
+    top: auto !important;
+    bottom: 12px !important;
+    transform: none !important;
+    opacity: 1;
+  }
+  .onboard-arrow { display: none; }
+}
+
+/* ============================
+   ONBOARDING FINAL OVERRIDE
+   Place at the VERY END of style.css
+   ============================ */
+
+/* Strong, readable dark tooltip with neon/pink accents */
+#onboardTooltip.onboard-tooltip,
+.onboard-tooltip#onboardTooltip {
+  background: linear-gradient(180deg, rgba(6,6,8,0.96), rgba(12,12,14,0.96)) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255,0,153,0.12) !important;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.7), 0 2px 8px rgba(255,0,153,0.03) !important;
+  padding: 14px 16px !important;
+  max-width: 380px !important;
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  transition: transform .22s cubic-bezier(.2,.9,.2,1), opacity .18s ease !important;
+  z-index: 2147483646 !important;
+  pointer-events: auto !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* Title / description */
+#onboardTooltip .onboard-title,
+#onboardTooltip .onboard-desc,
+#onboardTooltip #onboardTitle,
+#onboardTooltip #onboardDesc {
+  color: #fff !important;
+}
+#onboardTooltip .onboard-title,
+#onboardTooltip h3#onboardTitle {
+  color: var(--accent-neon) !important;
+  font-weight: 700;
+}
+
+/* Buttons inside the tooltip: pink primary + neutral skip */
+#onboardTooltip .onboard-actions .control-btn,
+#onboardTooltip .control-btn {
+  font-size: 0.95rem;
+  padding: 8px 12px;
+  border-radius: 8px;
+  min-width: 72px;
+}
+
+/* Primary (OK / Next) */
+#onboardTooltip .onboard-actions .control-btn.primary,
+#onboardTooltip .control-btn.primary,
+#onboardTooltip #onboardOk,
+#onboardTooltip #onboardOkBtn {
+  background: linear-gradient(90deg, var(--accent-neon), #ff66aa) !important;
+  color: white !important;
+  border: 1px solid rgba(255,102,170,0.9) !important;
+  box-shadow: 0 8px 28px rgba(255,0,153,0.14) !important;
+}
+
+/* Skip button: neutral outline, readable on dark bg */
+#onboardTooltip .onboard-actions .control-btn:not(.primary),
+#onboardTooltip .control-btn:not(.primary),
+#onboardTooltip #onboardSkip,
+#onboardTooltip #onboardSkipBtn {
+  background: transparent !important;
+  color: rgba(255,255,255,0.92) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+}
+
+/* Arrow: pink-tinted and visible */
+#onboardTooltip .onboard-arrow,
+.onboard-tooltip .onboard-arrow {
+  background: linear-gradient(135deg, rgba(255,0,153,0.12), rgba(255,102,170,0.06)) !important;
+  border-left: 1px solid rgba(255,0,153,0.12) !important;
+  border-top: 1px solid rgba(255,0,153,0.12) !important;
+  z-index: 2147483645 !important;
+}
+
+/* Highlight box stronger neon */
+.onboard-highlight {
+  border: 1px solid rgba(255,0,153,0.32) !important;
+  box-shadow: 0 0 0 8px rgba(255,0,153,0.04), 0 26px 70px rgba(0,0,0,0.7) !important;
+  animation: onboard-pulse 2200ms ease-in-out infinite !important;
+}
+
+/* Keep mobile fallback readable */
+@media (max-width: 600px) {
+  #onboardTooltip.onboard-tooltip,
+  .onboard-tooltip#onboardTooltip {
+    left: 12px !important;
+    right: 12px !important;
+    bottom: 12px !important;
+    top: auto !important;
+    transform: none !important;
+    max-width: calc(100% - 48px) !important;
+  }
+}
+
+/* Optional: if .show is ever added, use it for a pop-in */
+.onboard-tooltip.show,
+#onboardTooltip.show {
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+}
